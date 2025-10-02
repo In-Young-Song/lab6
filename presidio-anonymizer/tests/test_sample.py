@@ -6,7 +6,7 @@ def test_sample_run_anonymizer():
     start = 11
     end = 15
 
-    result = sample_run_anonymizer(text, start, end, "BIP")
+    result = sample_run_anonymizer(text, start, end)
 
     # Check anonymized text
     assert result.text == "My name is BIP."
@@ -14,9 +14,9 @@ def test_sample_run_anonymizer():
     # Check there is exactly one replacement item
     assert len(result.items) == 1
 
-    item = result.items[0]
-    assert item.start == 11
-    assert item.end == 14
-    assert item.entity_type == "PERSON"
-    assert item.text == "BIP"
-    assert item.operator == "replace"
+    item = result.items[0].to_dict()
+    assert item["start"] == 11
+    assert item["end"] == 14
+    assert item["entity_type"] == "PERSON"
+    assert item["text"] == "BIP"
+    assert item["operator"] == "replace"
