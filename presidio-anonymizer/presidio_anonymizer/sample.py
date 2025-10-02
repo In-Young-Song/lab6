@@ -2,11 +2,10 @@ from presidio_anonymizer import AnonymizerEngine
 from presidio_anonymizer.entities import RecognizerResult, OperatorConfig
 
 
-def sample_run_anonymizer(text: str, start: int, end: int, new_value: str = "BIP"):
+def sample_run_anonymizer(text: str, start: int, end: int):
     # Initialize the engine
     engine = AnonymizerEngine()
 
-    # Run anonymization
     result = engine.anonymize(
         text=text,
         analyzer_results=[
@@ -17,21 +16,17 @@ def sample_run_anonymizer(text: str, start: int, end: int, new_value: str = "BIP
                 score=0.8,
             )
         ],
-        operators={"PERSON": OperatorConfig("replace", {"new_value": new_value})},
+        operators={"PERSON": OperatorConfig("replace", {"new_value": "BIP"})},
     )
 
     return result
 
 
 if __name__ == "__main__":
-    # Example input
     text = "My name is Bond."
     start = 11
     end = 15
-
-    result = sample_run_anonymizer(text, start, end, "BIP")
-
-    # Print exactly as required
+    result = sample_run_anonymizer(text, start, end)
     print("text:", result.text)
     print("items:")
     print(result.items)
