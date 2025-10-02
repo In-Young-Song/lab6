@@ -284,6 +284,33 @@ def test_given_negative_start_or_endpoint_then_we_fail(start, end):
     ):
         create_recognizer_result("entity", 0, start, end)
 
+def test_given_negative_start_or_endpoint_then_we_fail(start, end):
+    with pytest.raises(
+        InvalidParamError,
+        match="Invalid input, result start and end must be positive",
+    ):
+        create_recognizer_result("entity", 0, start, end)
+
+
+# >>> Add your new test here, right before create_recognizer_result
+import pytest
+
+@pytest.mark.parametrize(
+    "a_start, a_end, b_start, b_end, expected",
+    [
+        (0, 5, 10, 15, 0),   # no overlap
+        (0, 10, 0, 10, 10),  # full overlap
+        (0, 10, 5, 15, 5),   # partial overlap
+        (0, 20, 5, 10, 5),   # containment
+        (0, 5, 5, 10, 0),    # exact-touch boundary
+    ],
+)
+def test_intersects(a_start, a_end, b_start, b_end, expected):
+    r1 = create_recognizer_result("NAME", 0.9, a_start, a_end)
+    r2 = create_recognizer_result("NAME", 0.8, b_start, b_end)
+    assert r1.intersects(r2) == expected
+    assert r2.intersects(r1) == expected
+
 
 def create_recognizer_result(entity_type: str, score: float, start: int, end: int):
     data = {"entity_type": entity_type, "score": score, "start": start, "end": end}
